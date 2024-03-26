@@ -2,14 +2,16 @@ import { HttpPostClient, HttpPostParams } from "@/data/protocols/http/httpPostCl
 import { HttpStatusCode, httpResponse } from "@/data/protocols/http/http-response";
 
 
-export class HttpPostClientSpy implements HttpPostClient {
+export class HttpPostClientSpy<T, R> implements HttpPostClient<T, R> {
+  // O T é o tipo do body que será enviado
+  // O R é o tipo da resposta que será recebido
   url?: string;
-  body?: object;
-  response: httpResponse = {
+  body?: T;
+  response: httpResponse<R> = {
     statusCode: HttpStatusCode.ok
   }
 
-  async post(params: HttpPostParams): Promise<httpResponse> {
+  async post(params: HttpPostParams<T>): Promise<httpResponse<R>> {
     this.url = params.url
     this.body = params.body
     return Promise.resolve(this.response)
