@@ -1,4 +1,4 @@
-import { httpResponse } from "./http-response";
+import { httpResponse } from ".";
 
 export type HttpPostParams<T> = {
   //quando chamar o HttpPostParams, terá que informar um tipo do body nesse caso, por isso o <T>
