@@ -1,5 +1,6 @@
 import { HttpStatusCode } from "@/data/protocols/http/http-response";
 import { HttpPostClientSpy } from "@/data/test";
+//Com os exports nos index, não é mais necessario importar os arquivos separados, apenas importando a pasta errors nesse caso abaixo
 import { InvalidCredentialsError, UnexpectedError } from "@/domain/errors";
 import { AccountModel } from "@/domain/models";
 import {
