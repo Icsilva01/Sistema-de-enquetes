@@ -18,17 +18,11 @@ const mockPostRequest = (): HttpPostParams<any> => ({
 })
 
 describe('AxiosHttpClient', () => {
-  test('Should call Axios with correct URL and verb', async () => {
+  test('Should call Axios with correct values', async () => {
     const request = mockPostRequest()
     const sut = makeSut()
     await sut.post(request)
-    expect(mockedAxios.post).toHaveBeenCalledWith(request.url)
+    expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.body)
     // o .post vai garantir que iremos chamar o método post do axios na url correta
   });
-  // test('Should call Axios with correct body', async () => {
-  //   const sut = makeSut()
-  //   await sut.post({ url: faker.internet.url() })
-  //   expect(mockedAxios.post).toHaveBeenCalledWith(url)
-    // o .post vai garantir que iremos chamar o método post do axios na url correta
-  // });
 })
