@@ -1,4 +1,3 @@
-
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
@@ -37,9 +36,11 @@ module.exports = {
     }]
   },
   devServer: {
-    contentBase: './public',
-    wrieToDisk: true,
-    historyApiFallback: true
+    static: './public',
+    historyApiFallback: true,
+    devMiddleware: {
+      writeToDisk: true,
+    },
   },
   externals: {
     react: 'React',
