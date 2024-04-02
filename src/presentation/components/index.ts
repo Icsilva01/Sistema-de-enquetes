@@ -1,0 +1,7 @@
+export { default as LoginFooter} from './footer/login-footer'
+export { default as FormStatus} from './formStatus/form-status'
+export { default as Input} from './input/input'
+export { default as LoginHeader} from './login-header/login-header'
+export { default as BackgroundImg} from './backgroundImg/background-img'
+export { default as Spinner} from './spinner/spinner'
+export { default as Logo} from './logo/logo'
