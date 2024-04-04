@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import Login from './login'
 
 describe('Login component', () => {
-  test('', () => {
+  test('Should not render Spinner and Error on start', () => {
     const {getByTestId} = render(<Login />)
     const errorWrap = getByTestId('error-wrap')
     expect(errorWrap.childElementCount).toBe(0)
