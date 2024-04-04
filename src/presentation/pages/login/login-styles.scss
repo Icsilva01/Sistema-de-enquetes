@@ -48,6 +48,14 @@
 
     .submit {
       margin-bottom: 20px;
+
+      &:disabled {
+        background-color: $disabled;
+        cursor: not-allowed;
+        &:hover {
+          background-color: $disabled;
+        }
+      }
     }
     .link {
       text-align: center;

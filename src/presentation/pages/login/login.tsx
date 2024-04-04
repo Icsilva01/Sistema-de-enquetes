@@ -9,20 +9,19 @@ import React, { useState } from "react";
 import Styles from "./login-styles.scss";
 import formContext from "@/presentation/components/contexts/form/form-context";
 
-type StateProps = {
-  isLoading: boolean,
-  errorMessage: string,
-};
-
 const Login: React.FC = () => {
-  const [state] = useState<StateProps>({
+  const [state] = useState({
     isLoading: false,
-    errorMessage: "",
+  });
+  const [errorState] = useState({
+    email: "Campo obrigatório",
+    password: "Campo obrigatório",
+    main: "",
   });
   return (
     <div className={Styles.login}>
       <LoginHeader />
-      <formContext.Provider value={state}>
+      <formContext.Provider value={{state, errorState}}>
         <div className={Styles.boxForm}>
           <form className={Styles.form}>
             <h2>Bem vindo a sua plataforma de enquetes!</h2>
@@ -34,7 +33,7 @@ const Login: React.FC = () => {
               name="password"
               placeholder="Digite sua senha"
             />
-            <button className={Styles.submit} type="submit">
+            <button data-testid ="submit" disabled className={Styles.submit} type="submit">
               Login
             </button>
             <span className={Styles.link}> Criar conta</span>
