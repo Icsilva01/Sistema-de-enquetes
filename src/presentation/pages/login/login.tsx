@@ -19,18 +19,18 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
     isLoading: false,
     email: "",
     password: "",
-    emailError: "Campo obrigatório",
-    passwordError: "Campo obrigatório",
+    emailError: "",
+    passwordError: "",
     mainError: "",
   });
 
   useEffect(() => {
-    validation.validate( 'email', state.email );
-  }, [state.email]);
-
-  useEffect(() => {
-    validation.validate('password', state.password );
-  }, [state.password]);
+    setState({
+      ...state,
+      emailError: validation.validate("email", state.email),
+      passwordError: validation.validate("password", state.password),
+    });
+  }, [state.email, state.password]);
 
   return (
     <div className={Styles.login}>
@@ -42,11 +42,7 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
             <p>E-mail</p>
             <Input type="email" name="email" placeholder="Digite seu e-mail" />
             <p>Senha</p>
-            <Input
-              type="password"
-              name="password"
-              placeholder="Digite sua senha"
-            />
+            <Input type="password" name="password" placeholder="Digite sua senha" />
             <button
               data-testid="submit"
               disabled
