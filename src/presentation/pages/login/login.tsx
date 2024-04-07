@@ -13,7 +13,7 @@ import Styles from "./login-styles.scss";
 
 type Props = {
   validation: Validation;
-  authentication: Autentication
+  authentication: Autentication;
 };
 
 const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
@@ -34,26 +34,48 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
     });
   }, [state.email, state.password]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement> ):Promise<void> => {
-    event.preventDefault()
-    setState({...state, isLoading: true})
-    await authentication.auth({
-      email:state.email,
-      password:state.password
-    })
-  }
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    event.preventDefault();
+    try {
+      if (state.isLoading || state.emailError || state.passwordError) {
+        return;
+      }
+      setState({ ...state, isLoading: true });
+      const account = await authentication.auth({
+        email: state.email,
+        password: state.password,
+      });
+      localStorage.setItem("accessToken", account.accessToken)
+    } catch (error) {
+      setState({
+        ...state,
+        isLoading: false,
+        mainError: error.message,
+      });
+    }
+  };
 
   return (
     <div className={Styles.login}>
       <LoginHeader />
       <formContext.Provider value={{ state, setState }}>
         <div className={Styles.boxForm}>
-          <form className={Styles.form} onSubmit={handleSubmit}>
+          <form
+            data-testid="form"
+            className={Styles.form}
+            onSubmit={handleSubmit}
+          >
             <h2>Bem vindo a sua plataforma de enquetes!</h2>
             <p>E-mail</p>
             <Input type="email" name="email" placeholder="Digite seu e-mail" />
             <p>Senha</p>
-            <Input type="password" name="password" placeholder="Digite sua senha" />
+            <Input
+              type="password"
+              name="password"
+              placeholder="Digite sua senha"
+            />
             <button
               data-testid="submit"
               disabled={!!state.emailError || !!state.passwordError}

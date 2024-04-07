@@ -5,9 +5,12 @@ import {
   cleanup,
   fireEvent,
   render,
+  waitFor
 } from "@testing-library/react";
 import React from "react";
 import Login from "./login";
+import "jest-localstorage-mock"
+import { InvalidCredentialsError } from "@/domain/errors";
 
 type SutTypes = {
   sut: RenderResult;
@@ -75,6 +78,10 @@ const simulateStatusField = (
 
 describe("Login component", () => {
   afterEach(cleanup);
+  
+  beforeEach(() => {
+    localStorage.clear()
+  })
   test("Should start with initial state", () => {
     const validationError = faker.lorem.words();
     const { sut } = makeSut({ validationError });
@@ -131,5 +138,35 @@ describe("Login component", () => {
       email,
       password,
     });
+  });
+  test("Should call authentication only once", () => {
+    const { sut, authenticationSpy } = makeSut();
+    simulateValidSubmit(sut);
+    simulateValidSubmit(sut);
+    expect(authenticationSpy.callsCount).toBe(1);
+  });
+  test("Should not call authentication if form is invalid", () => {
+    const validationError = faker.lorem.words();
+    const { sut, authenticationSpy } = makeSut({ validationError });
+    populateEmailField(sut);
+    fireEvent.submit(sut.getByTestId('form'))
+    expect(authenticationSpy.callsCount).toBe(0);
+  });
+  test("Should present error if Authentication fails", async () => {
+    const { sut, authenticationSpy } = makeSut();
+    const error = new InvalidCredentialsError
+    jest.spyOn(authenticationSpy, "auth").mockReturnValueOnce(Promise.reject(error))
+    simulateValidSubmit(sut);
+    const errorWrap = sut.getByTestId("error-wrap");
+    await waitFor(() => errorWrap)
+    const mainError = sut.getByTestId('main-error')
+    expect(mainError.textContent).toBe(error.message);
+    expect(errorWrap.childElementCount).toBe(1);
+  });
+  test("Should add access token to localStorage on success", async () => {
+    const { sut, authenticationSpy } = makeSut();
+    simulateValidSubmit(sut);
+    await waitFor(() => sut.getByTestId("form"))
+    expect(localStorage.setItem).toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
   });
 });
