@@ -10,6 +10,7 @@ import formContext from "@/presentation/components/contexts/form/form-context";
 import { Validation } from "@/presentation/protocols/validation";
 import React, { useEffect, useState } from "react";
 import Styles from "./login-styles.scss";
+import { Link } from "react-router-dom";
 
 type Props = {
   validation: Validation;
@@ -84,7 +85,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
             >
               Login
             </button>
-            <span className={Styles.link}> Criar conta</span>
+            <Link data-testid="signup" to={"/signup"} className={Styles.link}> Criar conta</Link>
             <FormStatus />
           </form>
           <BackgroundImg className={Styles.formImg} />
