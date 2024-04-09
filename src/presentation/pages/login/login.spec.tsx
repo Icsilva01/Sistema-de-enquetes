@@ -11,7 +11,7 @@ import {
 import { createMemoryHistory } from "history";
 import "jest-localstorage-mock";
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import Login from "./login";
 
 type SutTypes = {
@@ -22,17 +22,25 @@ type SutParams = {
   validationError: string;
 };
 
-const history = createMemoryHistory();
-const initialPath = history.location.pathname;
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => history,
+  useLocation: () => history.location,
+}));
+
+const history = createMemoryHistory({ initialEntries: ["/login"]});
 
 const makeSut = (params?: SutParams): SutTypes => {
   const validationStub = new ValidationStub();
   const authenticationSpy = new AuthenticationSpy();
   validationStub.errorMessage = params?.validationError;
   const sut = render(
-    <MemoryRouter initialEntries={[initialPath]}>
-      <Login validation={validationStub} authentication={authenticationSpy} />
-    </MemoryRouter>
+    <Router history={history}>
+      <Login
+        validation={validationStub}
+        authentication={authenticationSpy}
+      />
+    </Router>
   );
   return {
     sut,
@@ -175,10 +183,12 @@ describe("Login component", () => {
     simulateValidSubmit(sut);
     await waitFor(() => sut.getByTestId("form"))
     expect(localStorage.setItem).toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
+    expect(history.location.pathname).toBe("/");
   });
   test("Should go to signup page", async () => {
     const { sut } = makeSut();
-    const register = sut.getByTestId("signup")
-    fireEvent.click(register)
+    const register = sut.getByTestId("signup");
+    fireEvent.click(register);
+    expect(history.location.pathname).toBe("/signup");
   });
 });
