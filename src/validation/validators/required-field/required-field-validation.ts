@@ -1,5 +1,5 @@
+import { requiredFieldError } from "@/validation/errors";
 import { fieldValidation } from "@/validation/protocols/field-validation";
-import { requiredFieldError } from "../errors";
 
 
 
