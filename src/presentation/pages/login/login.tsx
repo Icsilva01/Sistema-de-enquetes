@@ -1,4 +1,4 @@
-import { Autentication } from "@/domain/usecases";
+import { Autentication, saveAccessToken } from "@/domain/usecases";
 import {
   BackgroundImg,
   FormStatus,
@@ -15,9 +15,10 @@ import { Link, useHistory } from "react-router-dom";
 type Props = {
   validation: Validation;
   authentication: Autentication;
+  saveAccessToken: saveAccessToken;
 };
 
-const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
+const Login: React.FC<Props> = ({ validation, authentication, saveAccessToken }: Props) => {
   const history = useHistory();
   const [state, setState] = useState({
     isLoading: false,
@@ -49,7 +50,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
         email: state.email,
         password: state.password,
       });
-      localStorage.setItem("accessToken", account.accessToken)
+      await saveAccessToken.save(account.accessToken);
       history.replace("/");
     } catch (error) {
       setState({
