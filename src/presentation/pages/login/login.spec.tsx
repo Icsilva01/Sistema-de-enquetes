@@ -1,5 +1,5 @@
 import { InvalidCredentialsError } from "@/domain/errors";
-import { AuthenticationSpy, ValidationStub, SaveAccessTokenMock } from "@/presentation/test";
+import { AuthenticationSpy, SaveAccessTokenMock, ValidationStub } from "@/presentation/test";
 import { faker } from "@faker-js/faker";
 import {
   RenderResult,
